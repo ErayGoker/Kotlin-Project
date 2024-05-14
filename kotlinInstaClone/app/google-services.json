@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295754664030",
+    "project_id": "kotlininstaclone-fe969",
+    "storage_bucket": "kotlininstaclone-fe969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295754664030:android:df621c9089433cda5f8ccf",
+        "android_client_info": {
+          "package_name": "com.eraygoker.kotlininstaclone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjWAyON4IZYN3QSQ9bvyeFZwCPN2Mt968"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
