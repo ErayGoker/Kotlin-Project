@@ -1,10 +1,13 @@
 package com.eraygoker.kotlininstaclone
 
 import android.content.Intent
+import android.Manifest
+
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -41,12 +44,15 @@ class UploadActivity : AppCompatActivity() {
         }
 
         fun selectImage(view: View){
+            Log.d("TAG", "Mesajınız buraya gelecek4")
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Log.d("TAG", "Mesajınız buraya gelecek5")
 
-            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Snackbar.make(view,"permissinon needed for gallery",Snackbar.LENGTH_LONG).setAction("Give Permission"){}.show()
-                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
+                    Log.d("TAG", "Mesajınız buraya gelecek6")
+                    Snackbar.make(view,"permissinon needed for gallery",Snackbar.LENGTH_LONG).setAction("Give Permission"){
+                        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }.show()
                 }
                 else{
                     permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -62,10 +68,13 @@ class UploadActivity : AppCompatActivity() {
         }
 
         private fun registerLauncher(){
-            activityResultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult(),){result->
+            activityResultLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
+                Log.d("TAG", "Mesajınız buraya gelecek1")
                 if (result.resultCode== RESULT_OK){
+                    Log.d("TAG", "Mesajınız buraya gelecek2")
                     val IntentFromResult=result.data
                     if (IntentFromResult!=null){
+                        Log.d("TAG", "Mesajınız buraya gelecek3")
                         selectedPicture=IntentFromResult.data
                         selectedPicture?.let {
                             binding.imageView.setImageURI(it)
@@ -73,7 +82,7 @@ class UploadActivity : AppCompatActivity() {
                     }
                 }
             }
-            permissionLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission(),){result->
+            permissionLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission()){result->
                 if (result){
                     val intentToGallery=Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     activityResultLauncher.launch(intentToGallery)
