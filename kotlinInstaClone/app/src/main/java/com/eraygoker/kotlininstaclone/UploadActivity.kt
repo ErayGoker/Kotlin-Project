@@ -22,6 +22,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.eraygoker.kotlininstaclone.databinding.ActivityUploadBinding
 import com.google.android.material.snackbar.Snackbar
+import pub.devrel.easypermissions.EasyPermissions
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
@@ -35,7 +36,23 @@ class UploadActivity : AppCompatActivity() {
         binding= ActivityUploadBinding.inflate(layoutInflater)
         val view=binding.root
         setContentView(view)
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // If not, request the permission
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                123
+            )
+        } else {
+            // Permission already granted, you can proceed with file access
+            // Do whatever you need to do with files here
+        }
         registerLauncher()
+
+
     }
         fun uploadClick(view: View){
 
@@ -43,12 +60,47 @@ class UploadActivity : AppCompatActivity() {
 
         }
 
+    // Handle the permission request response
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 123) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can proceed with file access
+                // Do whatever you need to do with files here
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message)
+            }
+        }
+    }
+
         fun selectImage(view: View){
             Log.d("TAG", "Mesajınız buraya gelecek4")
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 Log.d("TAG", "Mesajınız buraya gelecek5")
 
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                val perms = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                if (EasyPermissions.hasPermissions(this, *perms)) {
+                    // İzinler zaten var, işlemi gerçekleştir
+                    Log.d("TAG", "Mesajınız buraya gelecek6")
+                    // ...
+                } else {
+                    Log.d("TAG", "Mesajınız buraya gelecek61")
+                    // İzinler yok, şimdi iste
+                    runOnUiThread {
+                        EasyPermissions.requestPermissions(this@UploadActivity,"DDD",
+                            123, *perms)
+                    }
+
+                }
+
+
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     Log.d("TAG", "Mesajınız buraya gelecek6")
                     Snackbar.make(view,"permissinon needed for gallery",Snackbar.LENGTH_LONG).setAction("Give Permission"){
                         permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
